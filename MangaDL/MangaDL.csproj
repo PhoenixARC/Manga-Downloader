@@ -82,8 +82,14 @@
     <Compile Include="Forms\FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormSettings.Designer.cs">
+      <DependentUpon>FormSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Manga\MangaSeries.cs" />
-    <Compile Include="Manga\SeriesStatistics.cs" />
+    <Compile Include="Manga\Settings.cs" />
     <Compile Include="Manga\Sites\Batoto.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,6 +101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormSettings.resx">
+      <DependentUpon>FormSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -134,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MangaDLICON.ico" />
+    <None Include="Resources\settings.png" />
     <None Include="Resources\import.png" />
     <None Include="Resources\export.png" />
   </ItemGroup>

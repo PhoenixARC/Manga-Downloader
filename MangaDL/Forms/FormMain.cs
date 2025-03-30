@@ -20,6 +20,7 @@ namespace MangaDL
     public partial class FormMain: Form
     {
         public Dictionary<string, MangaSeries> ActiveTrackers = new Dictionary<string, MangaSeries>();
+        public Settings ProgramSettings = new Settings();
 
         public FormMain()
         {
@@ -124,7 +125,7 @@ namespace MangaDL
             dataGridView1_SelectionChanged(dataGridView1, EventArgs.Empty);
             Task.Run(async () =>
             {
-                await Batoto.DownloadSeries(tracker.Value, "MangaDown");
+                await Batoto.DownloadSeries(tracker.Value, ProgramSettings.OutputDirectory, (int)ProgramSettings.ChapterSaveMode);
             });
             tracker.Value.checking = false;
             return true;
@@ -146,14 +147,15 @@ namespace MangaDL
 
         public async Task<bool> CheckTracker(string Key)
         {
+            ActiveTrackers[Key].UseAltTitle = !ProgramSettings.NeverUseShortFolderNames;
             if (ActiveTrackers[Key].URL.StartsWith("https://bato.to/"))
             {
                 ActiveTrackers[Key].DownloadedChapters.Clear();
                 foreach (KeyValuePair<string, MangaSeries.MangaChapter> chap in ActiveTrackers[Key].chapters)
                 {
                     chap.Value.DownloadedPages.Clear();
-                    string DLPath = "MangaDown\\" + ActiveTrackers[Key].SeriesTitle + "\\" + chap.Key;
-                    string DLPath2 = "MangaDown\\" + ActiveTrackers[Key].AltSeriesTitle + "\\" + chap.Key;
+                    string DLPath = ProgramSettings.OutputDirectory + "\\" + ActiveTrackers[Key].SeriesTitle + "\\" + chap.Key;
+                    string DLPath2 = ProgramSettings.OutputDirectory + "\\" + ActiveTrackers[Key].AltSeriesTitle + "\\" + chap.Key;
 
                     try
                     {
@@ -222,6 +224,8 @@ namespace MangaDL
         {
             string OutJSON = Newtonsoft.Json.JsonConvert.SerializeObject(ActiveTrackers, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText("Progress.json", OutJSON);
+            OutJSON = Newtonsoft.Json.JsonConvert.SerializeObject(ProgramSettings, Newtonsoft.Json.Formatting.Indented);
+            File.WriteAllText("Config.json", OutJSON);
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -258,6 +262,10 @@ namespace MangaDL
                     }
                 }
                 UpdateTrackers();
+            }
+            if (File.Exists("config.json"))
+            {
+                ProgramSettings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("config.json"));
             }
         }
 
@@ -322,6 +330,21 @@ namespace MangaDL
         private void copyFolderNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(ActiveTrackers[dataGridView1.SelectedRows[0].Cells[0].Value.ToString()].AltSeriesTitle);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            FormSettings settings = new FormSettings(ProgramSettings);
+            if(settings.ShowDialog() == DialogResult.OK)
+            {
+                ProgramSettings = settings._settings;
+            }
+        }
+
+        private void markAsUnfinishedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ActiveTrackers[dataGridView1.SelectedRows[0].Cells[0].Value.ToString()].chapters[dataGridView2.SelectedRows[0].Cells[0].Value.ToString()].DownloadedPages.Clear();
+            ActiveTrackers[dataGridView1.SelectedRows[0].Cells[0].Value.ToString()].chapters[dataGridView2.SelectedRows[0].Cells[0].Value.ToString()].finished = false;
         }
     }
 }

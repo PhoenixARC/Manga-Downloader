@@ -157,20 +157,20 @@ namespace MangaDL.Manga.Sites
             return true;
         }
 
-        public static async Task<bool> DownloadSeries(MangaSeries series, string OutDir)
+        public static async Task<bool> DownloadSeries(MangaSeries series, string OutDir, int ChapterSaveMode = 0)
         {
             foreach (KeyValuePair<string, MangaSeries.MangaChapter> chapter in series.chapters)
             {
                 if (series.STOP) return true;
                 string PathToUse = series.UseAltTitle ? series.AltSeriesTitle : series.SeriesTitle;
-                DownloadChapter(series, chapter.Key.Trim(), OutDir + "\\" + PathToUse);
+                DownloadChapter(series, chapter.Key.Trim(), OutDir + "\\" + PathToUse, ChapterSaveMode);
                 series.DownloadedChapters.Add(chapter.Key);
 
             }
             return true;
         }
 
-        public static async Task<bool> DownloadChapter(MangaSeries series, string ChapName, string OutDir)
+        public static async Task<bool> DownloadChapter(MangaSeries series, string ChapName, string OutDir, int ChapterSaveMode = 0)
         {
 
             if (File.Exists(OutDir + "\\" + ChapName + ".zip") ||File.Exists(OutDir + "\\" + ChapName + ".cbz") || series.chapters[ChapName].finished)
@@ -204,8 +204,19 @@ namespace MangaDL.Manga.Sites
                 await DownloadPage(OutDir + "\\" + ChapName, page.Key, page.Value);
                 series.chapters[ChapName].DownloadedPages.Add(page.Key);
             }
-            ZipFile.CreateFromDirectory(OutDir + "\\" + ChapName, OutDir + "\\" + ChapName + ".cbz");
-            Directory.Delete(OutDir + "\\" + ChapName, true);
+
+            switch (ChapterSaveMode)
+            {
+                case 0:
+                    ZipFile.CreateFromDirectory(OutDir + "\\" + ChapName, OutDir + "\\" + ChapName + ".cbz");
+                    Directory.Delete(OutDir + "\\" + ChapName, true);
+                    break;
+                case 1:
+                    ZipFile.CreateFromDirectory(OutDir + "\\" + ChapName, OutDir + "\\" + ChapName + ".zip");
+                    Directory.Delete(OutDir + "\\" + ChapName, true);
+                    break;
+            }
+
             series.chapters[ChapName].finished = true;
             return true;
         }

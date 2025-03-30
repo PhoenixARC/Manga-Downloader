@@ -40,6 +40,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyFolderNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,13 +53,16 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.copyFolderNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.markAsUnfinishedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -88,7 +92,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(527, 204);
+            this.dataGridView1.Size = new System.Drawing.Size(608, 204);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
@@ -130,7 +134,7 @@
             this.copyNameToolStripMenuItem,
             this.copyFolderNameToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(212, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(212, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // removeToolStripMenuItem
@@ -149,6 +153,14 @@
             this.copyNameToolStripMenuItem.Text = "Copy Name";
             this.copyNameToolStripMenuItem.Click += new System.EventHandler(this.copyNameToolStripMenuItem_Click);
             // 
+            // copyFolderNameToolStripMenuItem
+            // 
+            this.copyFolderNameToolStripMenuItem.Name = "copyFolderNameToolStripMenuItem";
+            this.copyFolderNameToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.C)));
+            this.copyFolderNameToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.copyFolderNameToolStripMenuItem.Text = "Copy Folder Name";
+            this.copyFolderNameToolStripMenuItem.Click += new System.EventHandler(this.copyFolderNameToolStripMenuItem_Click);
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
@@ -163,7 +175,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 21.05263F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 78.94736F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 274F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(533, 541);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(614, 541);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // dataGridView2
@@ -177,6 +189,7 @@
             this.dataGridViewTextBoxColumn2,
             this.dataGridViewTextBoxColumn3,
             this.dataGridViewProgressColumn1});
+            this.dataGridView2.ContextMenuStrip = this.contextMenuStrip2;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -192,7 +205,7 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView2.Size = new System.Drawing.Size(527, 269);
+            this.dataGridView2.Size = new System.Drawing.Size(608, 269);
             this.dataGridView2.TabIndex = 4;
             // 
             // dataGridViewTextBoxColumn1
@@ -233,10 +246,11 @@
             this.flowLayoutPanel1.Controls.Add(this.button1);
             this.flowLayoutPanel1.Controls.Add(this.button3);
             this.flowLayoutPanel1.Controls.Add(this.button5);
+            this.flowLayoutPanel1.Controls.Add(this.button6);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(527, 50);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(608, 50);
             this.flowLayoutPanel1.TabIndex = 3;
             // 
             // button4
@@ -309,25 +323,45 @@
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // button6
+            // 
+            this.button6.BackColor = System.Drawing.Color.Transparent;
+            this.button6.BackgroundImage = global::MangaDL.Properties.Resources.settings;
+            this.button6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button6.Image = global::MangaDL.Properties.Resources.settings;
+            this.button6.Location = new System.Drawing.Point(507, 3);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(94, 44);
+            this.button6.TabIndex = 7;
+            this.button6.Text = "Settings";
+            this.button6.UseVisualStyleBackColor = false;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // timer1
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 5;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // copyFolderNameToolStripMenuItem
+            // contextMenuStrip2
             // 
-            this.copyFolderNameToolStripMenuItem.Name = "copyFolderNameToolStripMenuItem";
-            this.copyFolderNameToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.C)));
-            this.copyFolderNameToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
-            this.copyFolderNameToolStripMenuItem.Text = "Copy Folder Name";
-            this.copyFolderNameToolStripMenuItem.Click += new System.EventHandler(this.copyFolderNameToolStripMenuItem_Click);
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.markAsUnfinishedToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(175, 26);
+            // 
+            // markAsUnfinishedToolStripMenuItem
+            // 
+            this.markAsUnfinishedToolStripMenuItem.Name = "markAsUnfinishedToolStripMenuItem";
+            this.markAsUnfinishedToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.markAsUnfinishedToolStripMenuItem.Text = "Mark as unfinished";
+            this.markAsUnfinishedToolStripMenuItem.Click += new System.EventHandler(this.markAsUnfinishedToolStripMenuItem_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(533, 541);
+            this.ClientSize = new System.Drawing.Size(614, 541);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(549, 580);
@@ -341,6 +375,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -369,6 +404,9 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ToolStripMenuItem copyNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyFolderNameToolStripMenuItem;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem markAsUnfinishedToolStripMenuItem;
     }
 }
 
