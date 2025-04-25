@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaDL", "MangaDL\MangaDL.csproj", "{C05AA1A7-D1AA-43FC-8DAF-38D95DF32694}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaObjects", "MangaObjects\MangaObjects.csproj", "{D0BB213B-B5F2-4E18-9E1B-F591B5CB4FE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaDL.Loader.Batoto", "MangaDL.Loader.Batoto\MangaDL.Loader.Batoto.csproj", "{5E1DC066-9A5D-4104-A60E-CA22C37323C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{C05AA1A7-D1AA-43FC-8DAF-38D95DF32694}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C05AA1A7-D1AA-43FC-8DAF-38D95DF32694}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C05AA1A7-D1AA-43FC-8DAF-38D95DF32694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0BB213B-B5F2-4E18-9E1B-F591B5CB4FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0BB213B-B5F2-4E18-9E1B-F591B5CB4FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0BB213B-B5F2-4E18-9E1B-F591B5CB4FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0BB213B-B5F2-4E18-9E1B-F591B5CB4FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E1DC066-9A5D-4104-A60E-CA22C37323C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E1DC066-9A5D-4104-A60E-CA22C37323C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E1DC066-9A5D-4104-A60E-CA22C37323C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E1DC066-9A5D-4104-A60E-CA22C37323C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

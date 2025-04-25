@@ -7,9 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MangaDL.Manga;
-using MangaDL.Manga.Sites;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using MangaDL.MangaObjects;
 
 namespace MangaDL.Forms
 {
@@ -17,6 +15,7 @@ namespace MangaDL.Forms
     {
 
         public MangaSeries _series;
+        List<ILoader> loaders;
 
 
         //TESTING URLS
@@ -25,12 +24,18 @@ namespace MangaDL.Forms
         //https://bato.to/series/158951/they-say-there-s-a-ghost-in-the-club-room
         //https://bato.to/series/145932/rooming-with-a-gamer-gal-official
 
-        public AddSeries(string URL = "")
+        public AddSeries(List<ILoader> loaderList, string URL = "")
         {
             InitializeComponent();
+            loaders = loaderList;
             richTextBox1.Text = URL;
             if (!string.IsNullOrEmpty(URL))
                 CheckURL(URL);
+        }
+
+        public ILoader getLoaderForURL(string URI)
+        {
+            return loaders.FirstOrDefault(x => x.ServiceAddress.StartsWith(URI));
         }
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
@@ -52,21 +57,18 @@ namespace MangaDL.Forms
 
         private async void CheckURL(string URL)
         {
-            if (URL.StartsWith("https://bato.to/"))
-            {
-                await SanitizeBatotoV3();
-                URL = richTextBox1.Text;
-                button2.Enabled = false;
-                MangaSeries series = await Batoto.GetSeriesFromURL(URL, checkBox1.Checked);
-                treeView1.Nodes.Clear();
-                if (series == null) return;
+            await SanitizeBatotoV3();
+            URL = richTextBox1.Text;
+            button2.Enabled = false;
+            MangaSeries series = await getLoaderForURL(URL).GetSeriesFromURL(URL, checkBox1.Checked);
+            treeView1.Nodes.Clear();
+            if (series == null) return;
 
-                TreeNode seriesNode = new TreeNode(series.SeriesTitle + "[" + series.URL + "]");
-                foreach (KeyValuePair<string, MangaSeries.MangaChapter> chap in series.chapters)
-                    seriesNode.Nodes.Add(chap.Key + "[" + chap.Value.URL + "]");
-                treeView1.Nodes.Add(seriesNode);
-                _series = series;
-            }
+            TreeNode seriesNode = new TreeNode(series.SeriesTitle + "[" + series.URL + "]");
+            foreach (KeyValuePair<string, MangaSeries.MangaChapter> chap in series.chapters)
+                seriesNode.Nodes.Add(chap.Key + "[" + chap.Value.URL + "]");
+            treeView1.Nodes.Add(seriesNode);
+            _series = series;
             treeView1.ExpandAll();
             button2.Enabled = true;
         }

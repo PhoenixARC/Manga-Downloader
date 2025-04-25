@@ -7,15 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MangaDL.MangaObjects;
 
 namespace MangaDL.Forms
 {
     public partial class FormSettings: Form
     {
 
-        public MangaDL.Settings _settings;
+        public MangaDL.MangaObjects.Settings _settings;
 
-        public FormSettings(MangaDL.Settings settings)
+        public FormSettings(MangaDL.MangaObjects.Settings settings)
         {
             InitializeComponent();
             _settings = settings;
@@ -36,7 +37,7 @@ namespace MangaDL.Forms
         private void button2_Click(object sender, EventArgs e)
         {
             _settings.NeverUseShortFolderNames = checkBox1.Checked;
-            _settings.ChapterSaveMode = (Settings.MangaSaveMode)comboBox1.SelectedIndex;
+            _settings.ChapterSaveMode = (MangaDL.MangaObjects.Settings.MangaSaveMode)comboBox1.SelectedIndex;
             _settings.OutputDirectory = textBox1.Text;
             DialogResult = DialogResult.OK;
             this.Close();

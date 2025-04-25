@@ -10,14 +10,17 @@ using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.IO.Compression;
-using System.Xml.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using MangaDL.MangaObjects;
 
-namespace MangaDL.Manga.Sites
+namespace MangaDL.Loader
 {
-    public class Batoto
+    public class Batoto : ILoader
     {
-        public static async Task<MangaSeries> GetSeriesFromURL(string URL, bool isMature = false)
+        public string LoaderName => "Batoto Loader";
+        public string Author => "PhoenixARC";
+        public string ServiceAddress => "://bato.to/";
+
+        public async Task<MangaSeries> GetSeriesFromURL(string URL, bool isMature = false)
         {
             MangaSeries series = new MangaSeries();
             series.chapters = new Dictionary<string, MangaSeries.MangaChapter>();
@@ -45,7 +48,8 @@ namespace MangaDL.Manga.Sites
 
             if (titleNode == null || listItems == null || coverNode == null)
             {
-                System.Windows.Forms.MessageBox.Show("Cannot load series - is the mature flag wrong?");
+                throw new Exception("Cannot load series - is the mature flag wrong?");
+                
                 return null;
             }
 
@@ -81,7 +85,7 @@ namespace MangaDL.Manga.Sites
             return series;
         }
 
-        public static async Task<bool> RescanChapters(MangaSeries series)
+        public async Task<bool> RescanChapters(MangaSeries series)
         {
 
             HttpClient client = new HttpClient();
@@ -119,11 +123,11 @@ namespace MangaDL.Manga.Sites
             return true;
         }
 
-        public static async Task<bool> PopulatePages(MangaSeries.MangaChapter BatoChapter)
+        public async Task<bool> PopulatePages(MangaSeries.MangaChapter BatoChapter)
         {
             if (BatoChapter.finished)
             {
-                BatoChapter.Pages.Add("cover.webp","");
+                BatoChapter.Pages.Add("cover.webp", "");
                 BatoChapter.DownloadedPages.Add("cover.webp");
                 return true;
             }
@@ -157,7 +161,7 @@ namespace MangaDL.Manga.Sites
             return true;
         }
 
-        public static async Task<bool> DownloadSeries(MangaSeries series, string OutDir, int ChapterSaveMode = 0)
+        public async Task<bool> DownloadSeries(MangaSeries series, string OutDir, int ChapterSaveMode = 0)
         {
             foreach (KeyValuePair<string, MangaSeries.MangaChapter> chapter in series.chapters)
             {
@@ -170,10 +174,10 @@ namespace MangaDL.Manga.Sites
             return true;
         }
 
-        public static async Task<bool> DownloadChapter(MangaSeries series, string ChapName, string OutDir, int ChapterSaveMode = 0)
+        public async Task<bool> DownloadChapter(MangaSeries series, string ChapName, string OutDir, int ChapterSaveMode = 0)
         {
 
-            if (File.Exists(OutDir + "\\" + ChapName + ".zip") ||File.Exists(OutDir + "\\" + ChapName + ".cbz") || series.chapters[ChapName].finished)
+            if (File.Exists(OutDir + "\\" + ChapName + ".zip") || File.Exists(OutDir + "\\" + ChapName + ".cbz") || series.chapters[ChapName].finished)
             {
                 foreach (KeyValuePair<string, string> page in series.chapters[ChapName].Pages)
                 {
@@ -191,7 +195,7 @@ namespace MangaDL.Manga.Sites
                 File.WriteAllText(DirName + "\\ComicInfo.xml", "<?xml version=\"1.0\"?><ComicInfo><Series>" + series.SeriesTitle + "</Series><Title>" + ChapName + "</Title></ComicInfo>");
                 File.WriteAllBytes(CoverName, new WebClient().DownloadData(series.SeriesCoverURL));
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.InnerException.Message);
@@ -221,7 +225,7 @@ namespace MangaDL.Manga.Sites
             return true;
         }
 
-        public static async Task<long> DownloadPage(string DirPath, string EntryName, string URI)
+        public async Task<long> DownloadPage(string DirPath, string EntryName, string URI)
         {
             WebClient wc = new WebClient();
             try

@@ -47,6 +47,8 @@
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewProgressColumn1 = new Sample.DataGridViewProgressColumn();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.markAsUnfinishedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button4 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -55,14 +57,13 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.markAsUnfinishedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
-            this.flowLayoutPanel1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -132,9 +133,10 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.removeToolStripMenuItem,
             this.copyNameToolStripMenuItem,
-            this.copyFolderNameToolStripMenuItem});
+            this.copyFolderNameToolStripMenuItem,
+            this.openLocationToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(212, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(212, 114);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // removeToolStripMenuItem
@@ -238,6 +240,20 @@
             this.dataGridViewProgressColumn1.Name = "dataGridViewProgressColumn1";
             this.dataGridViewProgressColumn1.ProgressBarColor = System.Drawing.Color.Lime;
             this.dataGridViewProgressColumn1.ReadOnly = true;
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.markAsUnfinishedToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(175, 26);
+            // 
+            // markAsUnfinishedToolStripMenuItem
+            // 
+            this.markAsUnfinishedToolStripMenuItem.Name = "markAsUnfinishedToolStripMenuItem";
+            this.markAsUnfinishedToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.markAsUnfinishedToolStripMenuItem.Text = "Mark as unfinished";
+            this.markAsUnfinishedToolStripMenuItem.Click += new System.EventHandler(this.markAsUnfinishedToolStripMenuItem_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -343,19 +359,12 @@
             this.timer1.Interval = 5;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // contextMenuStrip2
+            // openLocationToolStripMenuItem
             // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.markAsUnfinishedToolStripMenuItem});
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(175, 26);
-            // 
-            // markAsUnfinishedToolStripMenuItem
-            // 
-            this.markAsUnfinishedToolStripMenuItem.Name = "markAsUnfinishedToolStripMenuItem";
-            this.markAsUnfinishedToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.markAsUnfinishedToolStripMenuItem.Text = "Mark as unfinished";
-            this.markAsUnfinishedToolStripMenuItem.Click += new System.EventHandler(this.markAsUnfinishedToolStripMenuItem_Click);
+            this.openLocationToolStripMenuItem.Name = "openLocationToolStripMenuItem";
+            this.openLocationToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.openLocationToolStripMenuItem.Text = "Open Location";
+            this.openLocationToolStripMenuItem.Click += new System.EventHandler(this.openLocationToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -374,8 +383,8 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.contextMenuStrip2.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -407,6 +416,7 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem markAsUnfinishedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openLocationToolStripMenuItem;
     }
 }
 

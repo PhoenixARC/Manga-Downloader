@@ -7,24 +7,65 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Sample;
-using MangaDL.Manga;
-using MangaDL.Manga.Sites;
+using MangaDL.MangaObjects;
 using MangaDL.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.IO;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace MangaDL
 {
     public partial class FormMain: Form
     {
         public Dictionary<string, MangaSeries> ActiveTrackers = new Dictionary<string, MangaSeries>();
-        public Settings ProgramSettings = new Settings();
+        public MangaDL.MangaObjects.Settings ProgramSettings = new MangaDL.MangaObjects.Settings();
+        List<ILoader> loaders;
 
         public FormMain()
         {
+            LoadSiteLoaders("Loaders");
             InitializeComponent();
+        }
+
+        public void LoadSiteLoaders(string loaderDirectory)
+        {
+            loaders = new List<ILoader>();
+            Directory.CreateDirectory(loaderDirectory);
+            var dllFiles = Directory.GetFiles(loaderDirectory, "*.dll");
+
+            foreach (var dll in dllFiles)
+            {
+                try
+                {
+                    Assembly assembly = Assembly.LoadFrom(dll);
+
+                    var types = assembly.GetTypes()
+                        .Where(t => typeof(ILoader).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+                    foreach (var type in types)
+                    {
+                        if (Activator.CreateInstance(type) is ILoader loader)
+                        {
+                            loaders.Add(loader);
+                            Console.WriteLine($"Loaded plugin: {loader.LoaderName}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load plugin from {dll}: {ex.Message}");
+                }
+            }
+
+        }
+
+        public ILoader getLoaderForURL(string URI)
+        {
+            foreach (ILoader loader in loaders)
+                if (URI.Contains(loader.ServiceAddress))
+                    return loader;
+            return null;
         }
 
         private async void UpdateTrackers()
@@ -125,7 +166,7 @@ namespace MangaDL
             dataGridView1_SelectionChanged(dataGridView1, EventArgs.Empty);
             Task.Run(async () =>
             {
-                await Batoto.DownloadSeries(tracker.Value, ProgramSettings.OutputDirectory, (int)ProgramSettings.ChapterSaveMode);
+                await getLoaderForURL(tracker.Value.URL).DownloadSeries(tracker.Value, ProgramSettings.OutputDirectory, (int)ProgramSettings.ChapterSaveMode);
             });
             tracker.Value.checking = false;
             return true;
@@ -147,15 +188,17 @@ namespace MangaDL
 
         public async Task<bool> CheckTracker(string Key)
         {
-            ActiveTrackers[Key].UseAltTitle = !ProgramSettings.NeverUseShortFolderNames;
-            if (ActiveTrackers[Key].URL.StartsWith("https://bato.to/"))
+
+            MangaSeries ms = ActiveTrackers[Key];
+            ms.UseAltTitle = !ProgramSettings.NeverUseShortFolderNames;
+            if (ms.URL.StartsWith("https://bato.to/"))
             {
-                ActiveTrackers[Key].DownloadedChapters.Clear();
-                foreach (KeyValuePair<string, MangaSeries.MangaChapter> chap in ActiveTrackers[Key].chapters)
+                ms.DownloadedChapters.Clear();
+                foreach (KeyValuePair<string, MangaSeries.MangaChapter> chap in ms.chapters)
                 {
                     chap.Value.DownloadedPages.Clear();
-                    string DLPath = ProgramSettings.OutputDirectory + "\\" + ActiveTrackers[Key].SeriesTitle + "\\" + chap.Key;
-                    string DLPath2 = ProgramSettings.OutputDirectory + "\\" + ActiveTrackers[Key].AltSeriesTitle + "\\" + chap.Key;
+                    string DLPath = ProgramSettings.OutputDirectory + "\\" + ms.SeriesTitle + "\\" + chap.Key;
+                    string DLPath2 = ProgramSettings.OutputDirectory + "\\" + ms.AltSeriesTitle + "\\" + chap.Key;
 
                     try
                     {
@@ -167,14 +210,13 @@ namespace MangaDL
                     if (File.Exists(DLPath2 + ".zip") || File.Exists(DLPath2 + ".cbz"))
                         chap.Value.finished = true;
                 }
-
-                await Batoto.RescanChapters(ActiveTrackers[Key]);
-                foreach(KeyValuePair<string, MangaSeries.MangaChapter> chap in ActiveTrackers[Key].chapters)
+                await getLoaderForURL(ms.URL).RescanChapters(ms);
+                foreach(KeyValuePair<string, MangaSeries.MangaChapter> chap in ms.chapters)
                 {
                     if(!chap.Value.finished)
                     await Task.Run(async () =>
                     {
-                        await Batoto.PopulatePages(chap.Value);
+                        await getLoaderForURL(ms.URL).PopulatePages(chap.Value);
 
                     });
                 }
@@ -185,7 +227,7 @@ namespace MangaDL
 
         private void button4_Click(object sender, EventArgs e)
         {
-            AddSeries adds = new AddSeries();
+            AddSeries adds = new AddSeries(loaders);
             if (adds.ShowDialog() == DialogResult.OK && !ActiveTrackers.ContainsKey(adds._series.SeriesTitle))
             {
                 if (!ActiveTrackers.ContainsKey(adds._series.SeriesTitle))
@@ -265,7 +307,7 @@ namespace MangaDL
             }
             if (File.Exists("config.json"))
             {
-                ProgramSettings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("config.json"));
+                ProgramSettings = JsonConvert.DeserializeObject<MangaDL.MangaObjects.Settings>(File.ReadAllText("config.json"));
             }
         }
 
@@ -276,7 +318,7 @@ namespace MangaDL
             {
                 foreach (string line in batch.links)
                 {
-                    AddSeries adds = new AddSeries(line);
+                    AddSeries adds = new AddSeries(loaders, line);
                     if (adds.ShowDialog() == DialogResult.OK && !ActiveTrackers.ContainsKey(adds._series.SeriesTitle))
                     {
                         ActiveTrackers.Add(adds._series.SeriesTitle, adds._series);
@@ -310,7 +352,7 @@ namespace MangaDL
                 {
                     foreach (string line in batch.links)
                     {
-                        AddSeries adds = new AddSeries(line);
+                        AddSeries adds = new AddSeries(loaders, line);
                         if (adds.ShowDialog() == DialogResult.OK && !ActiveTrackers.ContainsKey(adds._series.SeriesTitle))
                         {
                             ActiveTrackers.Add(adds._series.SeriesTitle, adds._series);
@@ -345,6 +387,11 @@ namespace MangaDL
         {
             ActiveTrackers[dataGridView1.SelectedRows[0].Cells[0].Value.ToString()].chapters[dataGridView2.SelectedRows[0].Cells[0].Value.ToString()].DownloadedPages.Clear();
             ActiveTrackers[dataGridView1.SelectedRows[0].Cells[0].Value.ToString()].chapters[dataGridView2.SelectedRows[0].Cells[0].Value.ToString()].finished = false;
+        }
+
+        private void openLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", @ProgramSettings.OutputDirectory);
         }
     }
 }

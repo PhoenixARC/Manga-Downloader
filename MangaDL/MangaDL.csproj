@@ -88,9 +88,6 @@
     <Compile Include="Forms\FormSettings.Designer.cs">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Manga\MangaSeries.cs" />
-    <Compile Include="Manga\Settings.cs" />
-    <Compile Include="Manga\Sites\Batoto.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\AddSeries.resx">
@@ -146,6 +143,15 @@
     <None Include="Resources\settings.png" />
     <None Include="Resources\import.png" />
     <None Include="Resources\export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MangaObjects\MangaObjects.csproj">
+      <Project>{d0bb213b-b5f2-4e18-9e1b-f591b5cb4fe8}</Project>
+      <Name>MangaObjects</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Manga\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.8.2\build\Fody.targets" Condition="Exists('..\packages\Fody.6.8.2\build\Fody.targets')" />

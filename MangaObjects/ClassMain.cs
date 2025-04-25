@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MangaDL.Manga
+namespace MangaDL.MangaObjects
 {
+    public interface ILoader
+    {
+        string LoaderName { get; }
+        string Author { get; }
+        string ServiceAddress { get; }
+        Task<MangaSeries> GetSeriesFromURL(string URL, bool isMature = false);
+        Task<bool> RescanChapters(MangaSeries series);
+        Task<bool> PopulatePages(MangaSeries.MangaChapter BatoChapter);
+        Task<bool> DownloadSeries(MangaSeries series, string OutDir, int ChapterSaveMode = 0);
+        Task<bool> DownloadChapter(MangaSeries series, string ChapName, string OutDir, int ChapterSaveMode = 0);
+        Task<long> DownloadPage(string DirPath, string EntryName, string URI);
+    }
     public class MangaSeries
     {
         public bool STOP { get; set; }
@@ -44,5 +55,27 @@ namespace MangaDL.Manga
                 checking = false;
             }
         }
+    }
+
+    public class Settings
+    {
+
+        public string OutputDirectory { get; set; }
+        public bool NeverUseShortFolderNames { get; set; } // not using short names could cause directory length issues
+        public MangaSaveMode ChapterSaveMode { get; set; }
+        public enum MangaSaveMode : int
+        {
+            CBZ = 0, // the only format that can save metadata
+            ZIP = 1,
+            FOLDER = 2
+        };
+
+        public Settings()
+        {
+            OutputDirectory = Environment.CurrentDirectory + "\\MangaDL";
+            NeverUseShortFolderNames = false;
+            ChapterSaveMode = MangaSaveMode.CBZ;
+        }
+
     }
 }
